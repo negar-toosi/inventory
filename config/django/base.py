@@ -2,7 +2,10 @@
 from pathlib import Path
 from dotenv import load_dotenv
 import os
+import logging
 
+logger = logging.getLogger(__name__)
+logger.info("this my test log")
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 load_dotenv()
@@ -113,3 +116,5 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 from config.settings.spectacular import *
+from config.settings.drf import *
+from config.settings.logging import *
