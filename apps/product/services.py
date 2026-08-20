@@ -50,6 +50,10 @@ class InventoryTransactionServices:
     def add(
         cls, product_id: UUID, quantity: int, type: InventoryTransactionType
     ) -> Product:
+        if quantity <= 0:
+            raise InventoryError.bad_request(
+                message="Quantity must be greater than zero."
+            )
         product = cls.get_product(product_id)
 
         current_inventory = product.current_inventory
