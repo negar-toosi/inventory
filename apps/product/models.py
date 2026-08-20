@@ -22,3 +22,4 @@ class InventoryTransaction(models.Model):
     previous_inventory = models.PositiveIntegerField()
     current_inventory = models.PositiveIntegerField()
     type = models.CharField(max_length=20, choices=InventoryTransactionType.choices)
+    created_at = models.DateTimeField(auto_now_add=True)
