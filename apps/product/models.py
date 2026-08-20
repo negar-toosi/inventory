@@ -6,7 +6,7 @@ from apps.product.enums import InventoryTransactionType
 
 class Product(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    name = models.CharField()
+    name = models.CharField(unique=True)
     current_inventory = models.PositiveIntegerField()
     is_deleted = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
