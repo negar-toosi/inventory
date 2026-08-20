@@ -11,12 +11,17 @@ from apps.product.api.serializers import (
 )
 from apps.core.custom_response import CustomResponse
 from apps.product.services import ProductServices, InventoryTransactionServices
+from apps.product.schema import AddProductSchema, ChangeProductInventorySchema,GetProductTransactionHistory
 from apps.core.pagination import get_paginated_response
 from uuid import UUID
 
 
 class ProductAPI(APIView):
-    @extend_schema(request=AddProductRequest, responses={201: ProductSerializer})
+    @extend_schema(
+        description="Add new product.",
+        request=AddProductSchema,
+        responses={201: ProductSerializer},
+    )
     def post(self, request: Request) -> CustomResponse:
         serializer = AddProductRequest(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -34,7 +39,11 @@ class ProductAPI(APIView):
 
 
 class InventoryTransactionAPI(APIView):
-    @extend_schema(request=InventoryTransactionRequest, responses=ProductSerializer)
+    @extend_schema(
+        description="change product inventory.",
+        request=ChangeProductInventorySchema,
+        responses=ProductSerializer,
+    )
     def post(self, request: Request, id: UUID) -> CustomResponse:
         serializer = InventoryTransactionRequest(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -51,14 +60,8 @@ class InventoryTransactionAPI(APIView):
         )
 
     @extend_schema(
-        parameters=[
-            OpenApiParameter(
-                "page",
-                int,
-                OpenApiParameter.QUERY,
-                description="page number.",
-            )
-        ],
+        description="Get product transactions history.",
+        parameters=GetProductTransactionHistory,
         responses={200: TransactionSerializer},
     )
     def get(self, request: Request, id: UUID) -> Response:
