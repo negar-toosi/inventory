@@ -6,33 +6,60 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Product',
+            name="Product",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('name', models.CharField()),
-                ('current_inventory', models.PositiveIntegerField()),
-                ('is_deleted', models.BooleanField(default=False)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('updated_at', models.DateTimeField(auto_now=True)),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("name", models.CharField()),
+                ("current_inventory", models.PositiveIntegerField()),
+                ("is_deleted", models.BooleanField(default=False)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("updated_at", models.DateTimeField(auto_now=True)),
             ],
         ),
         migrations.CreateModel(
-            name='InventoryTransaction',
+            name="InventoryTransaction",
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('quantity', models.PositiveIntegerField()),
-                ('previous_inventory', models.PositiveIntegerField()),
-                ('current_inventory', models.PositiveIntegerField()),
-                ('type', models.CharField(choices=[('increase', 'Increase'), ('decrease', 'Decrease')], max_length=20)),
-                ('product', models.ForeignKey(on_delete=django.db.models.deletion.RESTRICT, related_name='inventory_transaction', to='product.product')),
+                (
+                    "id",
+                    models.UUIDField(
+                        default=uuid.uuid4,
+                        editable=False,
+                        primary_key=True,
+                        serialize=False,
+                    ),
+                ),
+                ("quantity", models.PositiveIntegerField()),
+                ("previous_inventory", models.PositiveIntegerField()),
+                ("current_inventory", models.PositiveIntegerField()),
+                (
+                    "type",
+                    models.CharField(
+                        choices=[("increase", "Increase"), ("decrease", "Decrease")],
+                        max_length=20,
+                    ),
+                ),
+                (
+                    "product",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.RESTRICT,
+                        related_name="inventory_transaction",
+                        to="product.product",
+                    ),
+                ),
             ],
         ),
     ]

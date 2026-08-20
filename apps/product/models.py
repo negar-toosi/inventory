@@ -14,9 +14,7 @@ class Product(models.Model):
 
 
 class InventoryTransaction(models.Model):
-    id = models.UUIDField(
-        primary_key=True, default=uuid.uuid4, editable=False
-    )
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     product = models.ForeignKey(
         Product, on_delete=models.RESTRICT, related_name="inventory_transaction"
     )
