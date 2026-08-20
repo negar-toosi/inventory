@@ -10,6 +10,15 @@ class ProductSerializer(serializers.Serializer):
     updated_at = serializers.DateTimeField()
 
 
+class TransactionSerializer(serializers.Serializer):
+    id = serializers.UUIDField()
+    quantity = serializers.IntegerField()
+    previous_inventory = serializers.IntegerField()
+    current_inventory = serializers.IntegerField()
+    type = serializers.CharField()
+    created_at = serializers.DateTimeField()
+
+
 class AddProductRequest(serializers.Serializer):
     name = serializers.CharField()
     quantity = serializers.IntegerField(min_value=0)
