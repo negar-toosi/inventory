@@ -1,5 +1,3 @@
-import uuid
-
 from drf_spectacular.utils import OpenApiRequest, OpenApiParameter
 
 AddProductSchema = OpenApiRequest(

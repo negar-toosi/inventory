@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.request import Request
 from rest_framework.response import Response
 from rest_framework import status
-from drf_spectacular.utils import extend_schema, OpenApiParameter
+from drf_spectacular.utils import extend_schema
 from apps.product.api.serializers import (
     AddProductRequest,
     ProductSerializer,
@@ -11,7 +11,11 @@ from apps.product.api.serializers import (
 )
 from apps.core.custom_response import CustomResponse
 from apps.product.services import ProductServices, InventoryTransactionServices
-from apps.product.schema import AddProductSchema, ChangeProductInventorySchema,GetProductTransactionHistory
+from apps.product.schema import (
+    AddProductSchema,
+    ChangeProductInventorySchema,
+    GetProductTransactionHistory,
+)
 from apps.core.pagination import get_paginated_response
 from uuid import UUID
 
