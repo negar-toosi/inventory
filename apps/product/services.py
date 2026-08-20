@@ -6,13 +6,15 @@ from django.db import IntegrityError, transaction
 import logging
 
 logger = logging.getLogger(__name__)
+
+
 class ProductServices:
     @staticmethod
     def add(name: str, quantity: int) -> Product:
         try:
             with transaction.atomic():
                 product = Product.objects.create(
-                    name = name,
+                    name=name,
                     current_inventory=quantity,
                 )
                 if quantity != 0:
@@ -27,4 +29,3 @@ class ProductServices:
         except IntegrityError:
             logger.exception("A product with this name already exists.")
             raise InventoryError.bad_request("A product with this name already exists.")
-        

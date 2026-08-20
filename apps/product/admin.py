@@ -1,6 +1,7 @@
 from django.contrib import admin
 from apps.product.models import Product, InventoryTransaction
 
+
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
     list_display = (
@@ -8,6 +9,7 @@ class ProductAdmin(admin.ModelAdmin):
         "current_inventory",
         "is_deleted",
     )
+
 
 @admin.register(InventoryTransaction)
 class InventoryTransactionAdmin(admin.ModelAdmin):
