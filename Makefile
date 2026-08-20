@@ -65,7 +65,8 @@ backend-shell:
 
 backend-logs:
 	docker compose -f $(DOCKER_COMPOSE_FILE) logs backend -f
-
+pytest:
+	docker compose -f $(DOCKER_COMPOSE_FILE) exec -it backend pytest
 createsuperuser:
 	docker compose -f $(DOCKER_COMPOSE_FILE) exec -it backend \
 		env DJANGO_SUPERUSER_PASSWORD=$(DJANGO_SUPERUSER_PASSWORD) \
