@@ -32,6 +32,17 @@ class ProductServices:
             logger.exception("A product with this name already exists.")
             raise InventoryError.bad_request("A product with this name already exists.")
 
+    @staticmethod
+    def get(id: UUID):
+        try:
+            return Product.objects.get(id=id, is_deleted=False)
+        except Product.DoesNotExist:
+            logger.exception("The product does not exist.")
+            raise InventoryError.bad_request(
+                message="The product does not exist.",
+                extra={"id": str(id)},
+            )
+
 
 class InventoryTransactionServices:
     @classmethod
@@ -79,3 +90,8 @@ class InventoryTransactionServices:
                 message="The product does not exist.",
                 extra={"id": str(product_id)},
             )
+
+    def get(product: Product):
+        return InventoryTransaction.objects.filter(product=product).order_by(
+            "-created_at"
+        )
