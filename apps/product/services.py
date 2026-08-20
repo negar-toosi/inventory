@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from apps.product.models import Product, InventoryTransaction
 from apps.product.enums import InventoryTransactionType
 from apps.core.exceptions import InventoryError
@@ -29,3 +31,51 @@ class ProductServices:
         except IntegrityError:
             logger.exception("A product with this name already exists.")
             raise InventoryError.bad_request("A product with this name already exists.")
+
+
+class InventoryTransactionServices:
+    @classmethod
+    @transaction.atomic
+    def add(
+        cls, product_id: UUID, quantity: int, type: InventoryTransactionType
+    ) -> Product:
+        product = cls.get_product(product_id)
+
+        current_inventory = product.current_inventory
+
+        if type == InventoryTransactionType.DECREASE:
+            if current_inventory < quantity:
+                raise InventoryError.bad_request(
+                    f"Insufficient inventory. Only {current_inventory} units are available."
+                )
+
+            new_inventory = current_inventory - quantity
+
+        else:
+            new_inventory = current_inventory + quantity
+
+        InventoryTransaction.objects.create(
+            product=product,
+            quantity=quantity,
+            previous_inventory=current_inventory,
+            current_inventory=new_inventory,
+            type=type,
+        )
+
+        product.current_inventory = new_inventory
+        product.save(update_fields=["current_inventory"])
+
+        return product
+
+    def get_product(product_id: UUID) -> Product:
+        try:
+            product = Product.objects.select_for_update().get(
+                pk=product_id,
+                is_deleted=False,
+            )
+            return product
+        except Product.DoesNotExist:
+            raise InventoryError.bad_request(
+                message="The product does not exist.",
+                extra={"id": str(product_id)},
+            )
