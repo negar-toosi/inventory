@@ -1,14 +1,17 @@
 from rest_framework.views import APIView
 from rest_framework.request import Request
+from rest_framework.response import Response
 from rest_framework import status
-from drf_spectacular.utils import extend_schema
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from apps.product.api.serializers import (
     AddProductRequest,
     ProductSerializer,
     InventoryTransactionRequest,
+    TransactionSerializer,
 )
 from apps.core.custom_response import CustomResponse
 from apps.product.services import ProductServices, InventoryTransactionServices
+from apps.core.pagination import get_paginated_response
 from uuid import UUID
 
 
@@ -45,4 +48,27 @@ class InventoryTransactionAPI(APIView):
             message="Product Updated Successfully",
             data=response.data,
             status_code=status.HTTP_200_OK,
+        )
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "page",
+                int,
+                OpenApiParameter.QUERY,
+                description="page number.",
+            )
+        ],
+        responses={200: TransactionSerializer},
+    )
+    def get(self, request: Request, id: UUID) -> Response:
+        product = ProductServices.get(id=id)
+        transactions = InventoryTransactionServices.get(product=product)
+
+        return get_paginated_response(
+            message="Inventory transactions retrieved successfully.",
+            serializer_class=TransactionSerializer,
+            queryset=transactions,
+            request=request,
+            view=self,
         )
