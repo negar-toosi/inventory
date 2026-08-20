@@ -67,9 +67,14 @@ backend-logs:
 	docker compose -f $(DOCKER_COMPOSE_FILE) logs backend -f
 
 createsuperuser:
-	docker compose -f $(DOCKER_COMPOSE_FILE) exec -it backend python manage.py \
-		createsuperuser --noinput --phone_number +989123456789
-	@ echo "-> superuser created with phone_number: +989123456789 & password: $(DJANGO_SUPERUSER_PASSWORD)"
+	docker compose -f $(DOCKER_COMPOSE_FILE) exec -it backend \
+		env DJANGO_SUPERUSER_PASSWORD=$(DJANGO_SUPERUSER_PASSWORD) \
+		python manage.py createsuperuser \
+		--noinput \
+		--username root\
+		--email root@gmail.com
+	@ echo "-> superuser created with username: root & password: $(DJANGO_SUPERUSER_PASSWORD)"
+
 
 collectstatic:
 	docker compose -f $(DOCKER_COMPOSE_FILE) exec -it backend python manage.py collectstatic --noinput
