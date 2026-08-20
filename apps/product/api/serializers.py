@@ -20,8 +20,13 @@ class TransactionSerializer(serializers.Serializer):
 
 
 class AddProductRequest(serializers.Serializer):
-    name = serializers.CharField()
+    name = serializers.CharField(max_length=250)
     quantity = serializers.IntegerField(min_value=0)
+
+    def validate_name(self, value):
+        if not isinstance(self.initial_data.get("name"), str):
+            raise serializers.ValidationError("name must be a string.")
+        return value
 
 
 class InventoryTransactionRequest(serializers.Serializer):
