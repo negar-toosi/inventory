@@ -17,7 +17,6 @@ from rest_framework.exceptions import (
 from rest_framework.response import Response
 from rest_framework.views import exception_handler as drf_default_handler
 
-from apps.core.custom_response import CustomResponse
 from apps.core.exceptions import InventoryError
 
 logger = logging.getLogger(__name__)
@@ -27,7 +26,7 @@ def inventory_exception_handler(exc: Exception, context: dict) -> Response:
 
     if isinstance(exc, InventoryError):
         message = str(exc.detail)
-        return CustomResponse(message, exc.extra, exc.status_code)
+        return error_response(message, exc.extra, exc.status_code)
 
     if isinstance(exc, Http404):
         exc = NotFound()
@@ -41,17 +40,29 @@ def inventory_exception_handler(exc: Exception, context: dict) -> Response:
     drf_response = drf_default_handler(exc, context)
 
     if drf_response is not None:
-        return CustomResponse(
+        return error_response(
             message=_drf_message(exc),
             extra=drf_response.data,
             http_status=drf_response.status_code,
         )
 
     logger.exception("Unhandled exception", exc_info=exc)
-    return CustomResponse(
+    return error_response(
         message="An unexpected internal error occurred. Please try again later.",
         extra={},
         http_status=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    )
+
+
+def error_response(message: str, extra, http_status: int) -> Response:
+    return Response(
+        {
+            "message": message,
+            "success": False,
+            "extra": extra,
+            "status": http_status,
+        },
+        status=http_status,
     )
 
 

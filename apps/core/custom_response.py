@@ -9,17 +9,11 @@ class CustomResponse(Response):
         status_code=200,
         **kwargs,
     ):
-        if status_code >= 400:
-            response_data = {
-                "data": data,
-                "success": False,
-                "message": message,
-                "status": status_code,
-            }
+
         response_data = {
-            "data": data,
-            "success": True,
             "message": message,
+            "success": True,
+            "data": data,
             "status": status_code,
         }
 
