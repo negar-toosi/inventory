@@ -1,7 +1,7 @@
 import uuid
 
 from django.db import models
-from apps.product.enums import ProductTransactionStatus
+from apps.product.enums import InventoryTransactionType
 
 
 class Product(models.Model):
@@ -21,4 +21,4 @@ class InventoryTransaction(models.Model):
     quantity = models.PositiveIntegerField()
     previous_inventory = models.PositiveIntegerField()
     current_inventory = models.PositiveIntegerField()
-    type = models.CharField(max_length=20, choices=ProductTransactionStatus.choices)
+    type = models.CharField(max_length=20, choices=InventoryTransactionType.choices)
