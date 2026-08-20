@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from apps.product.enums import InventoryTransactionType
 
+
 class ProductSerializer(serializers.Serializer):
     id = serializers.UUIDField()
     name = serializers.CharField()
@@ -16,7 +17,4 @@ class AddProductRequest(serializers.Serializer):
 
 class InventoryTransactionRequest(serializers.Serializer):
     quantity = serializers.IntegerField(min_value=1)
-    type = serializers.ChoiceField(
-        choices=InventoryTransactionType.choices
-    )
-
+    type = serializers.ChoiceField(choices=InventoryTransactionType.choices)
