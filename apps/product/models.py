@@ -20,6 +20,8 @@ class Product(models.Model):
                 name="unique_active_product_name",
             ),
         ]
+    def __str__(self):
+        return f"{self.name},{self.is_deleted}"
 
 class InventoryTransaction(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
